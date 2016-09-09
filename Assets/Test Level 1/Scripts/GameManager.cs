@@ -1,15 +1,15 @@
-﻿#define local_testing
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using HKD_1;
 
 public class GameManager : MonoBehaviour
 {
+	public bool localTesting;
+
 	public GameObject PlayerPrefab;
 
-	private List<Rigidbody2D> m_players;
-	private List<float[]> m_playerValues;
+	private Dictionary<int, PlayerController> m_players;
 
 	private enum PlayerValues
 	{
@@ -17,69 +17,73 @@ public class GameManager : MonoBehaviour
 		HORIZONTAL_MOVEMENT = 1,
 		VERTICAL_MOVEMENT = 2
 	}
-
+	 
 	// Use this for initialization
 	void Start ()
 	{
-		m_players = new List<Rigidbody2D> ();
-		m_playerValues = new List<float[]> ();
+		m_players = new Dictionary<int, PlayerController> ();
 
-		#if local_testing
-		OnPlayerConnected (200);
-		#endif
+		if (localTesting) {
+			Debug.LogWarning ("Using Local Testing");
+			OnPlayerConnected (200);
+		}
 	}
 
 	public void OnPlayerConnected (int deviceID)
 	{
 		GameObject newPlayer = (GameObject)GameObject.Instantiate (PlayerPrefab, Vector3.zero, Quaternion.identity);
-		m_players.Add (newPlayer.GetComponent<Rigidbody2D> ());
-		m_playerValues.Add (new float[] { deviceID, 0.0f, 0.0f }); 
+		m_players.Add (deviceID, newPlayer.GetComponent<PlayerController> ());
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		#if local_testing
-
-		#endif
-		UpdatePlayerMovement ();
-
-	}
-
-	void UpdatePlayerMovement ()
-	{
-		#if local_testing
-		m_playerValues [0] [(int)PlayerValues.HORIZONTAL_MOVEMENT] = Input.GetAxisRaw ("Horizontal");
-		m_playerValues [0] [(int)PlayerValues.VERTICAL_MOVEMENT] = Input.GetAxisRaw ("Vertical");
-		#endif
-
-		for (int i = 0; i < m_players.Count; i++) {
-			Vector2 playerMovement = new Vector2 (m_playerValues [i] [(int)PlayerValues.HORIZONTAL_MOVEMENT], m_playerValues [i] [(int)PlayerValues.VERTICAL_MOVEMENT]);
-			m_players [i].AddForce (playerMovement, ForceMode2D.Impulse);
+		if (localTesting) {
+			LocalTesting ();
 		}
 	}
 
-	void LocalTesting() {
+	void LocalTesting ()
+	{
+		SetPlayerMovement (200, Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));
 
+		if (Input.GetAxisRaw ("Jump") > 0) {
+			SetPlayerAction (200, true);
+		} else {
+			SetPlayerAction (200, false);
+		}
+
+		if (Input.GetKeyDown ("b")) {
+			PlayerController player = null;
+			m_players.TryGetValue (200, out player);
+
+			player.SetDamage ();
+		}
 	}
 
 	public void SetPlayerMovement (int sender, float horizontalMovement, float verticalMovement)
 	{
-		for (int i = 0; i < m_players.Count; i++) {
-			if (m_playerValues [i] [(int)PlayerValues.DEVICE_ID] == sender) {
-				m_playerValues [i] [(int)PlayerValues.HORIZONTAL_MOVEMENT] = horizontalMovement;
-				m_playerValues [i] [(int)PlayerValues.VERTICAL_MOVEMENT] = verticalMovement;
-				return;
-			}
+		PlayerController player = null;
+		m_players.TryGetValue (sender, out player);
+
+		if (player == null) {
+			Debug.LogError ("id: " + sender + " not recognised");
+			return;
 		}
+
+		player.SetMovement (horizontalMovement, verticalMovement);
 	}
 
-	public void SetPlayerAction (int sender, bool pressed)
+	public void SetPlayerAction (int sender, bool active)
 	{
-		for (int i = 0; i < m_players.Count; i++) {
-				//Handle action here
-				return;
-			}
+		PlayerController player = null;
+		m_players.TryGetValue (sender, out player);
+
+		if (player == null) {
+			Debug.LogError ("id: " + sender + " not recognised");
+			return;
 		}
+
+		player.SetAction (active);
 	}
 }
