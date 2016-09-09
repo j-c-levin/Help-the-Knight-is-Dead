@@ -42,7 +42,7 @@ namespace HKD_1
 
 			GameObject currentSpawnPoint = m_spawners [spawnPointNumber];
 
-			GameObject enemy = (GameObject)GameObject.Instantiate (Enemy, currentSpawnPoint.transform.position, Quaternion.identity);
+			GameObject enemy = (GameObject)GameObject.Instantiate (Enemy, currentSpawnPoint.transform.position, currentSpawnPoint.transform.rotation);
 
 			SpawnPoint sp = currentSpawnPoint.GetComponent<SpawnPoint> ();
 

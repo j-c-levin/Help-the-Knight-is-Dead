@@ -18,6 +18,9 @@ namespace HKD_1
 
 				if (m_completionPercentage >= 100) {
 					m_completionPercentage = 100;
+				}
+
+				if (m_completionPercentage > 0) {
 					m_isBlocking = true;
 				}
 
@@ -26,7 +29,9 @@ namespace HKD_1
 					m_isBlocking = false;
 				}
 					
-				completionText.text = m_completionPercentage + "%";
+				if (completionText != null) {
+					completionText.text = m_completionPercentage + "%";
+				}
 			}
 		}
 
@@ -41,6 +46,7 @@ namespace HKD_1
 		void Start ()
 		{
 			completionText = GetComponentInChildren<Text> ();
+			completionPercentage = 100;
 		}
 
 		public TapState DetermineInput (bool activeInput)
@@ -71,12 +77,12 @@ namespace HKD_1
 			return response;
 		}
 
-		public bool IsBlocking ()
+		public virtual bool IsBlocking ()
 		{
 			return m_isBlocking;
 		}
 
-		public void Damage (int damage)
+		public virtual void Damage (int damage)
 		{
 			completionPercentage -= damage;
 		}

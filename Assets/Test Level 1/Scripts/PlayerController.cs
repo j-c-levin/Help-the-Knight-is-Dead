@@ -80,6 +80,11 @@ namespace HKD_1
 			return m_resourceStorage.Remove (resource);
 		}
 
+		public void RemoveInteractable (IInteractable deadEnemy)
+		{
+			m_interactableList.Remove (deadEnemy);
+		}
+
 		void OnTriggerEnter2D (Collider2D collider)
 		{
 			IInteractable interactableObject = collider.GetComponent<IInteractable> ();

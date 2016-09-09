@@ -16,7 +16,7 @@ public class InteractableResourceDrop : InteractableObject, IInteractable
 	private void CompleteInteraction (PlayerController player)
 	{
 		if (player.UseResource (consumedResource)) {
-			completionPercentage += 50;
+			completionPercentage += 30;
 		}
 	}
 }

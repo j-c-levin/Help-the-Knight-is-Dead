@@ -5,6 +5,8 @@ using HKD_1;
 
 public class GameManager : MonoBehaviour
 {
+	public GameObject playerSpawn;
+
 	public bool localTesting;
 
 	public GameObject PlayerPrefab;
@@ -31,7 +33,7 @@ public class GameManager : MonoBehaviour
 
 	public void OnPlayerConnected (int deviceID)
 	{
-		GameObject newPlayer = (GameObject)GameObject.Instantiate (PlayerPrefab, Vector3.zero, Quaternion.identity);
+		GameObject newPlayer = (GameObject)GameObject.Instantiate (PlayerPrefab, playerSpawn.transform.position, Quaternion.identity);
 		m_players.Add (deviceID, newPlayer.GetComponent<PlayerController> ());
 	}
 	
