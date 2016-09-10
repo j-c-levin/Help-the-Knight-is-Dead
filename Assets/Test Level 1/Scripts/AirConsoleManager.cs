@@ -67,7 +67,7 @@ public class AirConsoleManager : MonoBehaviour
 
 	void ReceivedAction (int from, JToken data)
 	{
-		m_gameManager.SetPlayerAction (from, (bool)data ["special"] ["pressed"]);
+		m_gameManager.SetPlayerAction (from, (bool)data ["action"] ["pressed"]);
 	}
 
 	void OnConnect (int device_id)

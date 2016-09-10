@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
 
 	private Dictionary<int, PlayerController> m_players;
 
+	float m_min = 0f;
+	float m_max = 1f;
+
 	private enum PlayerValues
 	{
 		DEVICE_ID = 0,
@@ -34,6 +37,7 @@ public class GameManager : MonoBehaviour
 	public void OnPlayerConnected (int deviceID)
 	{
 		GameObject newPlayer = (GameObject)GameObject.Instantiate (PlayerPrefab, playerSpawn.transform.position, Quaternion.identity);
+		newPlayer.GetComponent<SpriteRenderer> ().color = new Color (Random.Range (m_min, m_max), Random.Range (m_min, m_max), Random.Range (m_min, m_max));
 		m_players.Add (deviceID, newPlayer.GetComponent<PlayerController> ());
 	}
 	
