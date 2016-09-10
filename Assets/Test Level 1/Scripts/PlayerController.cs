@@ -6,7 +6,8 @@ namespace HKD_1
 {
 	public class PlayerController : MonoBehaviour
 	{
-		private int m_deviceID;
+		public int deviceID;
+
 		private int m_resourceStorageLimit = 1;
 
 		private float m_horizontalMovement;
@@ -30,7 +31,9 @@ namespace HKD_1
 		{
 			UpdateMovement ();
 
-			UpdateAction ();
+			if (m_action) {
+				UpdateAction ();
+			}
 		}
 
 		private void UpdateMovement ()
@@ -55,6 +58,7 @@ namespace HKD_1
 		public void SetAction (bool active)
 		{
 			m_action = active;
+			UpdateAction ();
 		}
 
 		//Not needed outside of testing

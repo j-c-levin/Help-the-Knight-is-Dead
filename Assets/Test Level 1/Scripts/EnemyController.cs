@@ -82,7 +82,7 @@ namespace HKD_1
 
 		public void Interact (PlayerController player, bool activeInput)
 		{
-			if (DetermineInput (activeInput) == TapState.BUTTON_DOWN) {
+			if (DetermineInput (activeInput, player.deviceID) == TapState.BUTTON_DOWN) {
 				CompleteInteraction (player);
 			}
 		}

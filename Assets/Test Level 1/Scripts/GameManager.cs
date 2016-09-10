@@ -7,11 +7,15 @@ public class GameManager : MonoBehaviour
 {
 	public GameObject playerSpawn;
 
+	public int numberOfExpectedPlayers;
+
 	public bool localTesting;
 
 	public GameObject PlayerPrefab;
 
 	private Dictionary<int, PlayerController> m_players;
+
+	private EnemySpawner m_enemySpawner;
 
 	float m_min = 0f;
 	float m_max = 1f;
@@ -31,6 +35,8 @@ public class GameManager : MonoBehaviour
 		if (localTesting) {
 			Debug.LogWarning ("Using Local Testing");
 			OnPlayerConnected (200);
+		} else {
+			GetComponent<EnemySpawner> ().enabled = false;
 		}
 	}
 
@@ -39,6 +45,11 @@ public class GameManager : MonoBehaviour
 		GameObject newPlayer = (GameObject)GameObject.Instantiate (PlayerPrefab, playerSpawn.transform.position, Quaternion.identity);
 		newPlayer.GetComponent<SpriteRenderer> ().color = new Color (Random.Range (m_min, m_max), Random.Range (m_min, m_max), Random.Range (m_min, m_max));
 		m_players.Add (deviceID, newPlayer.GetComponent<PlayerController> ());
+		newPlayer.GetComponent<PlayerController> ().deviceID = deviceID;
+
+		if (m_players.Count >= numberOfExpectedPlayers && !GetComponent<EnemySpawner> ().enabled) {
+			GetComponent<EnemySpawner> ().enabled = true;
+		}
 	}
 	
 	// Update is called once per frame

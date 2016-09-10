@@ -6,7 +6,7 @@ public class InteractableHolding : InteractableObject, IInteractable
 {
 	public void Interact (PlayerController player, bool activeInput)
 	{
-		if (DetermineInput (activeInput) == TapState.BUTTON_PRESSED) {
+		if (DetermineInput (activeInput, player.deviceID) == TapState.BUTTON_PRESSED) {
 			CompleteInteraction ();
 		}
 	}
