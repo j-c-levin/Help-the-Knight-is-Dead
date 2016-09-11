@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 
 	public GameObject PlayerPrefab;
 
+	public Color[] playerColours;
+
 	private Dictionary<int, PlayerController> m_players;
 
 	private EnemySpawner m_enemySpawner;
@@ -45,9 +47,9 @@ public class GameManager : MonoBehaviour
 		//Spawn a new player
 		GameObject newPlayer = (GameObject)GameObject.Instantiate (PlayerPrefab, playerSpawn.transform.position, Quaternion.identity);
 
-		//Give it a random color
-		newPlayer.GetComponent<SpriteRenderer> ().color = new Color (Random.Range (m_min, m_max), Random.Range (m_min, m_max), Random.Range (m_min, m_max));
-
+		//Give a color from the array
+		newPlayer.GetComponent<SpriteRenderer> ().color = playerColours [m_players.Count];
+			
 		//Add it to the players list
 		m_players.Add (deviceID, newPlayer.GetComponent<PlayerController> ());
 
@@ -113,10 +115,10 @@ public class GameManager : MonoBehaviour
 		player.SetAction (active);
 	}
 
-	public void EnemyDefeated (IInteractable deadEnemy)
+	public void RemoveInteractable (IInteractable interactableObject)
 	{
 		foreach (PlayerController player in m_players.Values) {
-			player.RemoveInteractable (deadEnemy);
+			player.RemoveInteractable (interactableObject);
 		}
 	}
 }

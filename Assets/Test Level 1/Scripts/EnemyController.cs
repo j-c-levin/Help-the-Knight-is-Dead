@@ -104,7 +104,7 @@ namespace HKD_1
 		private void CompleteInteraction (PlayerController player)
 		{
 			if (player.UseResource (consumedResource)) {
-				m_gameManager.EnemyDefeated (this);
+				m_gameManager.RemoveInteractable (this);
 				Destroy (gameObject);
 			}
 		}
