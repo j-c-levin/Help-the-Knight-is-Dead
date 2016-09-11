@@ -8,12 +8,15 @@ namespace HKD_1
 	{
 		public int deviceID;
 
+		public TapState tapState;
+
 		private int m_resourceStorageLimit = 1;
 
 		private float m_horizontalMovement;
 		private float m_verticalMovement;
 
-		private bool m_action;
+		private bool m_action = false;
+		private bool m_lastInputWasTrue = false;
 
 		private Rigidbody2D m_rigidbody;
 
@@ -45,8 +48,8 @@ namespace HKD_1
 		private void UpdateAction ()
 		{
 			for (int i = 0; i < m_interactableList.Count; i++) {
-				m_interactableList [i].Interact (this, m_action);
-			} 
+				m_interactableList [i].Interact (this);
+			}
 		}
 
 		public void SetMovement (float horizontal, float vertical)
@@ -57,8 +60,14 @@ namespace HKD_1
 
 		public void SetAction (bool active)
 		{
+			//Assign the last input action
+			m_lastInputWasTrue = m_action;
+
+			//Set the player's tap state based on current and previous input
+			tapState = DetermineInput (active);
+
+			//Assign the current input for use in update()
 			m_action = active;
-			UpdateAction ();
 		}
 
 		//Not needed outside of testing
@@ -74,19 +83,48 @@ namespace HKD_1
 			if (m_resourceStorage.Count < m_resourceStorageLimit) {
 				m_resourceStorage.Add (resource);
 			} else {
-				m_resourceStorage.Remove (0);
+				m_resourceStorage.RemoveAt (0);
 				m_resourceStorage.Add (resource);
 			}
 		}
 
 		public bool UseResource (ResourceType resource)
 		{
-			return m_resourceStorage.Remove (resource);
+			bool isTrue = m_resourceStorage.Remove (resource);
+
+			return isTrue;
 		}
 
 		public void RemoveInteractable (IInteractable deadEnemy)
 		{
 			m_interactableList.Remove (deadEnemy);
+		}
+
+		public TapState DetermineInput (bool activeInput)
+		{
+			TapState response = TapState.NONE;
+
+			//Button not pressed -> button not pressed
+			if (!m_lastInputWasTrue && !activeInput) {
+				response = TapState.BUTTON_UP;
+			}
+
+			//Button not pressed -> button pressed
+			if (!m_lastInputWasTrue && activeInput) {
+				response = TapState.BUTTON_DOWN;
+			}
+
+			//Button pressed -> button not pressed
+			if (m_lastInputWasTrue && !activeInput) {
+				response = TapState.BUTTON_UP;
+			}
+
+			//Button pressed -> buton pressed
+			if (m_lastInputWasTrue && activeInput) {
+				response = TapState.BUTTON_PRESSED;
+			}
+
+			return response;
 		}
 
 		void OnTriggerEnter2D (Collider2D collider)

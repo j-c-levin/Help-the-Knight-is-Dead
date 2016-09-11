@@ -5,9 +5,9 @@ using HKD_1;
 
 public class InteractableTapping : InteractableObject, IInteractable
 {
-	public void Interact (PlayerController player, bool activeInput)
+	public void Interact (PlayerController player)
 	{
-		if (DetermineInput (activeInput, player.deviceID) == TapState.BUTTON_DOWN) {
+		if (player.tapState == TapState.BUTTON_DOWN) {
 			CompleteInteraction ();
 		}
 	}

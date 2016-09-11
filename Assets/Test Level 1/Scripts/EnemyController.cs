@@ -13,9 +13,12 @@ namespace HKD_1
 		private int currentNodeID = 0;
 
 		private bool m_continue = true;
+		private bool m_destroyAfterHittingKing = false;
 
 		private float m_damageTickTimer = 1.5f;
-		private float m_movementSpeed = 0.02f;
+		private float m_movementSpeed = 0.01f;
+
+		private int m_damageToObstacles = 20;
 
 		private IInteractable curentObstacle {
 			get {
@@ -36,7 +39,7 @@ namespace HKD_1
 			float me = transform.position.x;
 			float dest = currentNode.transform.position.x;
 
-			if (Mathf.Approximately (me, dest) && m_continue) {
+			if (m_continue && Mathf.Approximately (me, dest)) {
 				m_continue = false;
 
 				if (!ShouldMoveToNextTarget ()) {
@@ -52,9 +55,13 @@ namespace HKD_1
 
 		private IEnumerator DamageObject ()
 		{
-			curentObstacle.Damage (40);
-
 			yield return new WaitForSeconds (m_damageTickTimer);
+
+			curentObstacle.Damage (m_damageToObstacles);
+
+			if (m_destroyAfterHittingKing) {
+				Destroy (gameObject);
+			}
 
 			if (!ShouldMoveToNextTarget ()) {
 				StartCoroutine (DamageObject ());
@@ -65,12 +72,12 @@ namespace HKD_1
 		{
 			//Deal 10 damage to the king and die
 			if (currentNodeID == m_spawnPoint.nodes.Length - 1) {
-				curentObstacle.Damage (10);
-				Destroy (gameObject);
-				return true;
+				m_damageToObstacles = 6;
+				m_destroyAfterHittingKing = true;
+				return false;
 			}
 
-			//False if it's still active, true if it isn't
+			//False if it's still active and needs attacking, true if it isn't and can proceed
 			if (curentObstacle.IsBlocking ()) {
 				return false;
 			} else {
@@ -80,9 +87,9 @@ namespace HKD_1
 			}
 		}
 
-		public void Interact (PlayerController player, bool activeInput)
+		public void Interact (PlayerController player)
 		{
-			if (DetermineInput (activeInput, player.deviceID) == TapState.BUTTON_DOWN) {
+			if (player.tapState == TapState.BUTTON_DOWN) {
 				CompleteInteraction (player);
 			}
 		}

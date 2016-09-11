@@ -10,7 +10,7 @@
 
 	public interface IInteractable
 	{
-		void Interact (PlayerController player, bool active);
+		void Interact (PlayerController player);
 
 		void Damage (int damage);
 

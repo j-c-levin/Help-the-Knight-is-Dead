@@ -6,7 +6,7 @@ namespace HKD_1
 {
 	public class InteractableKing : InteractableObject, IInteractable
 	{
-		public void Interact (PlayerController player, bool active)
+		public void Interact (PlayerController player)
 		{
 			//Intentionally empty
 		}
