@@ -42,11 +42,19 @@ public class GameManager : MonoBehaviour
 
 	public void OnPlayerConnected (int deviceID)
 	{
+		//Spawn a new player
 		GameObject newPlayer = (GameObject)GameObject.Instantiate (PlayerPrefab, playerSpawn.transform.position, Quaternion.identity);
+
+		//Give it a random color
 		newPlayer.GetComponent<SpriteRenderer> ().color = new Color (Random.Range (m_min, m_max), Random.Range (m_min, m_max), Random.Range (m_min, m_max));
+
+		//Add it to the players list
 		m_players.Add (deviceID, newPlayer.GetComponent<PlayerController> ());
+
+		//Assign the player it's device ID
 		newPlayer.GetComponent<PlayerController> ().deviceID = deviceID;
 
+		//For testing, only start the game when enough players have been connected
 		if (m_players.Count >= numberOfExpectedPlayers && !GetComponent<EnemySpawner> ().enabled) {
 			GetComponent<EnemySpawner> ().enabled = true;
 		}
@@ -60,6 +68,7 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	//For keyboard movement and actions
 	void LocalTesting ()
 	{
 		SetPlayerMovement (200, Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));
@@ -102,5 +111,12 @@ public class GameManager : MonoBehaviour
 		}
 
 		player.SetAction (active);
+	}
+
+	public void EnemyDefeated (IInteractable deadEnemy)
+	{
+		foreach (PlayerController player in m_players.Values) {
+			player.RemoveInteractable (deadEnemy);
+		}
 	}
 }

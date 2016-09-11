@@ -20,6 +20,8 @@ namespace HKD_1
 
 		private int m_damageToObstacles = 20;
 
+		private GameManager m_gameManager;
+
 		private IInteractable curentObstacle {
 			get {
 				return m_spawnPoint.obstacles [currentNodeID].GetComponent<IInteractable> ();
@@ -51,6 +53,11 @@ namespace HKD_1
 		public void SetSpawnPoint (SpawnPoint sp)
 		{
 			m_spawnPoint = sp;
+		}
+
+		public void SetGameManager (GameManager gm)
+		{
+			m_gameManager = gm;
 		}
 
 		private IEnumerator DamageObject ()
@@ -97,7 +104,7 @@ namespace HKD_1
 		private void CompleteInteraction (PlayerController player)
 		{
 			if (player.UseResource (consumedResource)) {
-				player.RemoveInteractable (this);
+				m_gameManager.EnemyDefeated (this);
 				Destroy (gameObject);
 			}
 		}

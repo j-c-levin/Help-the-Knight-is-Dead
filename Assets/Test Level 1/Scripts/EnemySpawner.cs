@@ -47,6 +47,7 @@ namespace HKD_1
 			SpawnPoint sp = currentSpawnPoint.GetComponent<SpawnPoint> ();
 
 			enemy.GetComponent<EnemyController> ().SetSpawnPoint (sp);
+			enemy.GetComponent<EnemyController> ().SetGameManager (GetComponent<GameManager> ());
 		}
 	}
 }

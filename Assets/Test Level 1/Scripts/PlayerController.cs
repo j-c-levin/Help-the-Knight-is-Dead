@@ -80,24 +80,17 @@ namespace HKD_1
 
 		public void AddResource (ResourceType resource)
 		{
-			if (m_resourceStorage.Count < m_resourceStorageLimit) {
-				m_resourceStorage.Add (resource);
-			} else {
+			//If the player's inventory is full, remove the oldest resource and add the new one
+			if (m_resourceStorage.Count >= m_resourceStorageLimit) {
 				m_resourceStorage.RemoveAt (0);
-				m_resourceStorage.Add (resource);
 			}
+
+			m_resourceStorage.Add (resource);
 		}
 
 		public bool UseResource (ResourceType resource)
 		{
-			bool isTrue = m_resourceStorage.Remove (resource);
-
-			return isTrue;
-		}
-
-		public void RemoveInteractable (IInteractable deadEnemy)
-		{
-			m_interactableList.Remove (deadEnemy);
+			return m_resourceStorage.Remove (resource);
 		}
 
 		public TapState DetermineInput (bool activeInput)
@@ -119,12 +112,17 @@ namespace HKD_1
 				response = TapState.BUTTON_UP;
 			}
 
-			//Button pressed -> buton pressed
+			//Button pressed -> button pressed
 			if (m_lastInputWasTrue && activeInput) {
 				response = TapState.BUTTON_PRESSED;
 			}
 
 			return response;
+		}
+
+		public void RemoveInteractable (IInteractable interactableObject)
+		{
+			m_interactableList.Remove (interactableObject);
 		}
 
 		void OnTriggerEnter2D (Collider2D collider)
