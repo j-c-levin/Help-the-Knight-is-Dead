@@ -16,5 +16,9 @@ public class InteractableHolding : InteractableObject, IInteractable
 		//Will absolutely need to change how this is handled because right now
 		//It's biased towards computers that can pump out higher fps
 		completionPercentage += 1;
+
+		if (completionPercentage % 15 == 0) {
+			StartCoroutine (flash ());
+		}
 	}
 }

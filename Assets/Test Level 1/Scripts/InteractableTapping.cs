@@ -15,5 +15,7 @@ public class InteractableTapping : InteractableObject, IInteractable
 	private void CompleteInteraction ()
 	{
 		completionPercentage += 5;
+
+		StartCoroutine (flash ());
 	}
 }

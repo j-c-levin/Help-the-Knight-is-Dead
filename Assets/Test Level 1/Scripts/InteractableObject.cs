@@ -57,5 +57,22 @@ namespace HKD_1
 		{
 			completionPercentage -= damage;
 		}
+
+		protected IEnumerator flash ()
+		{
+			SpriteRenderer sr = GetComponent<SpriteRenderer> ();
+
+			if (sr != null) {
+				Color current = sr.color;
+				sr.color = Color.green;
+				yield return new WaitForSeconds (0.1f);
+				sr.color = current;
+			} else {
+				Color current = gameObject.GetComponent<Renderer> ().material.color;
+				gameObject.GetComponent<Renderer> ().material.color = Color.green;
+				yield return new WaitForSeconds (0.1f);
+				gameObject.GetComponent<Renderer> ().material.color = current;
+			}
+		}
 	}
 }

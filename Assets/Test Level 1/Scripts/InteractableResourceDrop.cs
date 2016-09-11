@@ -17,6 +17,7 @@ public class InteractableResourceDrop : InteractableObject, IInteractable
 	{
 		if (player.UseResource (consumedResource)) {
 			completionPercentage += 30;
+			StartCoroutine (flash ());
 		}
 	}
 }

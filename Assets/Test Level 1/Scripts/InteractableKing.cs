@@ -15,6 +15,8 @@ namespace HKD_1
 		{
 			completionPercentage -= damage;
 
+			StartCoroutine (flash ());
+
 			if (completionPercentage <= 0) {
 				Debug.Log ("GAME OVER!!!!!");
 				Time.timeScale = 0f;
