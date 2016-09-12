@@ -18,16 +18,6 @@ public class GameManager : MonoBehaviour
 	private Dictionary<int, PlayerController> m_players;
 
 	private EnemySpawner m_enemySpawner;
-
-	float m_min = 0f;
-	float m_max = 1f;
-
-	private enum PlayerValues
-	{
-		DEVICE_ID = 0,
-		HORIZONTAL_MOVEMENT = 1,
-		VERTICAL_MOVEMENT = 2
-	}
 	 
 	// Use this for initialization
 	void Start ()

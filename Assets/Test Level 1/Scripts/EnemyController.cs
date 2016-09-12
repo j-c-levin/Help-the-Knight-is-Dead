@@ -67,7 +67,7 @@ namespace HKD_1
 			curentObstacle.Damage (m_damageToObstacles);
 
 			if (m_destroyAfterHittingKing) {
-				Destroy (gameObject);
+				DestroyEnemy ();
 			}
 
 			if (!ShouldMoveToNextTarget ()) {
@@ -104,9 +104,14 @@ namespace HKD_1
 		private void CompleteInteraction (PlayerController player)
 		{
 			if (player.UseResource (consumedResource)) {
-				m_gameManager.RemoveInteractable (this);
-				Destroy (gameObject);
+				DestroyEnemy ();
 			}
+		}
+
+		private void DestroyEnemy ()
+		{
+			m_gameManager.RemoveInteractable (this);
+			Destroy (gameObject);
 		}
 	}
 }
