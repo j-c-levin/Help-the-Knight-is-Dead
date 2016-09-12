@@ -14,6 +14,7 @@ namespace HKD_1
 
 		private float m_horizontalMovement;
 		private float m_verticalMovement;
+		private float m_movementFactor = 5;
 
 		private bool m_action = false;
 		private bool m_lastInputWasTrue = false;
@@ -41,8 +42,10 @@ namespace HKD_1
 
 		private void UpdateMovement ()
 		{
-			Vector2 playerMovement = new Vector2 (m_horizontalMovement, m_verticalMovement);
-			m_rigidbody.AddForce (playerMovement, ForceMode2D.Impulse);
+			Vector2 playerMovement = new Vector2 (m_horizontalMovement * m_movementFactor,
+				                         m_verticalMovement * m_movementFactor);
+			//m_rigidbody.AddForce (playerMovement, ForceMode2D.Impulse);
+			m_rigidbody.velocity = playerMovement;
 		}
 
 		private void UpdateAction ()
