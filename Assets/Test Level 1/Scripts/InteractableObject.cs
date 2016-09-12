@@ -45,7 +45,7 @@ namespace HKD_1
 		void Start ()
 		{
 			completionText = GetComponentInChildren<Text> ();
-			completionPercentage = 100;
+			completionPercentage = 0;
 		}
 
 		public virtual bool IsBlocking ()

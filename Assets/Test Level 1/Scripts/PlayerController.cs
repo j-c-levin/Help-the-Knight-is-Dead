@@ -14,10 +14,13 @@ namespace HKD_1
 
 		private float m_horizontalMovement;
 		private float m_verticalMovement;
-		private float m_movementFactor = 5;
+		private float m_movementFactor = 5f;
+		private float m_maxActionMovementDistance = 1f;
 
 		private bool m_action = false;
 		private bool m_lastInputWasTrue = false;
+
+		private Vector2 m_lastPositionWhenHeldDown;
 
 		private Rigidbody2D m_rigidbody;
 
@@ -108,6 +111,9 @@ namespace HKD_1
 			//Button not pressed -> button pressed
 			if (!m_lastInputWasTrue && activeInput) {
 				response = TapState.BUTTON_DOWN;
+
+				//Record where the player is during on key down for use in pressed
+				m_lastPositionWhenHeldDown = (Vector2)transform.position;
 			}
 
 			//Button pressed -> button not pressed
@@ -118,6 +124,14 @@ namespace HKD_1
 			//Button pressed -> button pressed
 			if (m_lastInputWasTrue && activeInput) {
 				response = TapState.BUTTON_PRESSED;
+
+				float distanceMoved = Vector2.Distance (m_lastPositionWhenHeldDown, (Vector2)transform.position);
+
+				if (distanceMoved > m_maxActionMovementDistance) {
+					//Player has moved too far whilst holding down the button
+					//release it for them
+					response = TapState.BUTTON_UP;
+				}
 			}
 
 			return response;
