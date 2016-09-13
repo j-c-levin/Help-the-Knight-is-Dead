@@ -10,6 +10,8 @@ namespace HKD_1
 	{
 		protected Text completionText;
 
+		private Color m_myColour;
+
 		protected int completionPercentage {
 			get {
 				return m_completionPercentage;
@@ -46,6 +48,12 @@ namespace HKD_1
 		{
 			completionText = GetComponentInChildren<Text> ();
 			completionPercentage = 100;
+
+			if (GetComponent<SpriteRenderer> () != null) {
+				m_myColour = GetComponent<SpriteRenderer> ().color;
+			} else {
+				m_myColour = gameObject.GetComponent<Renderer> ().material.color;
+			}
 		}
 
 		public virtual bool IsBlocking ()
@@ -60,18 +68,14 @@ namespace HKD_1
 
 		protected IEnumerator flash ()
 		{
-			SpriteRenderer sr = GetComponent<SpriteRenderer> ();
-
-			if (sr != null) {
-				Color current = sr.color;
-				sr.color = Color.green;
+			if (GetComponent<SpriteRenderer> () != null) {
+				GetComponent<SpriteRenderer> ().color = Color.green;
 				yield return new WaitForSeconds (0.1f);
-				sr.color = current;
+				GetComponent<SpriteRenderer> ().color = m_myColour;
 			} else {
-				Color current = gameObject.GetComponent<Renderer> ().material.color;
 				gameObject.GetComponent<Renderer> ().material.color = Color.green;
 				yield return new WaitForSeconds (0.1f);
-				gameObject.GetComponent<Renderer> ().material.color = current;
+				gameObject.GetComponent<Renderer> ().material.color = m_myColour;
 			}
 		}
 	}
