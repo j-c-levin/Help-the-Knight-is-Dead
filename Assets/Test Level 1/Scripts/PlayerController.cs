@@ -14,7 +14,7 @@ namespace HKD_1
 
 		private float m_horizontalMovement;
 		private float m_verticalMovement;
-		private float m_movementFactor = 6f;
+		private float m_movementFactor = 7f;
 		private float m_maxActionMovementDistance = 1f;
 
 		private bool m_action = false;

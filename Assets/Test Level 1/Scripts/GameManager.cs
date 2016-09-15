@@ -24,11 +24,13 @@ public class GameManager : MonoBehaviour
 	{
 		m_players = new Dictionary<int, PlayerController> ();
 
+		m_enemySpawner = GetComponent<EnemySpawner> ();
+
 		if (localTesting) {
 			Debug.LogWarning ("Using Local Testing");
 			OnPlayerConnected (200);
 		} else {
-			GetComponent<EnemySpawner> ().enabled = false;
+			m_enemySpawner.enabled = false;
 		}
 	}
 
@@ -110,5 +112,7 @@ public class GameManager : MonoBehaviour
 		foreach (PlayerController player in m_players.Values) {
 			player.RemoveInteractable (interactableObject);
 		}
+
+		m_enemySpawner.RemoveInteractable (interactableObject);
 	}
 }
