@@ -13,7 +13,6 @@
       <div id="right" class="right"></div>
     </div>
 
-
     <div style="display: none;">
       <div id="template-DPad">
         <div>
@@ -64,7 +63,7 @@
 <script type="text/javascript" src="airconsole-controls/swipe-pattern/swipe-pattern.js"></script>
 <script type="text/javascript" src="airconsole-controls/ctrl-generator/ctrl-generator.js"></script>
 <script type="text/javascript">
-var airconsole = new AirConsole({orientation: AirConsole.ORIENTATION_LANDSCAPE});
+var airconsole = new AirConsole({orientation: AirConsole.ORIENTATION_LANDSCAPE, synchronize_time: true});
 CtrlGenerator.setAirConsole(airconsole);
 CtrlGenerator.generate({"left":{"type":{"label":"Joystick","class_name":"Joystick"}},"middle":[],"right":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"Bonk","key":"action","on_up_message":true}]});
 </script></body></html>

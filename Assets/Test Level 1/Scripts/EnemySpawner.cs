@@ -16,10 +16,20 @@ namespace HKD_1
 		private float m_downtimeRemaining;
 		private float m_timeBetweenSets = 5f;
 		private float m_currentTimeBetweenSets;
-		private float m_timeBetweenUnits = 1.5f;
+		private float m_timeBetweenUnits = 2.5f;
 
 		private int m_currentSetNumber = 0;
 		private int m_wavesCompleted = 0;
+
+		List<EnemyController> m_activeEnemies;
+
+		private List<Wave> m_waves;
+
+		private WaveState m_waveState = WaveState.WAITING;
+
+		private Wave m_currentWave;
+
+		private Set m_currentSet;
 
 		private struct Wave
 		{
@@ -41,16 +51,6 @@ namespace HKD_1
 			DOWNTIME,
 			END
 		}
-
-		List<EnemyController> m_activeEnemies;
-
-		private List<Wave> m_waves;
-
-		private WaveState m_waveState = WaveState.WAITING;
-
-		private Wave m_currentWave;
-
-		private Set m_currentSet;
 
 		// Use this for initialization
 		void Start ()
@@ -90,12 +90,15 @@ namespace HKD_1
 			set2 = NewSet (new int[] { 2, 4 });
 			set3 = NewSet (new int[] { 2, 3 });
 			Wave wave2 = NewWave (new Set[] { set1, set2, set3 });
+			m_waves.Add (wave2);
 
 			set1 = NewSet (new int[] { 1, 3 });
 			set2 = NewSet (new int[] { 2, 3 });
 			set3 = NewSet (new int[] { 4, 4 });
 			set4 = NewSet (new int[] { 5, 4 });
 			Wave wave3 = NewWave (new Set[] { set1, set2, set3, set4 });
+			m_waves.Add (wave3);
+
 		}
 
 		private void WaveStateMachine ()
@@ -171,14 +174,28 @@ namespace HKD_1
 				return;
 			}
 
+			ShuffleSpawnerIndex ();
+
 			//Take a set of units and set them to spawn
 			for (int i = 0; i < m_currentSet.units.Length; i++) {
-				StartCoroutine (SpawnUnitCount (m_currentSet.units [i]));
+				StartCoroutine (SpawnUnitCount (m_currentSet.units [i],
+					m_spawners [i].GetComponent<SpawnPoint> ()));
 			}
 
 			Debug.Log ("set in progress");
 			m_waveState = WaveState.SET_IN_PROGRESS;
 			m_currentTimeBetweenSets = m_timeBetweenSets;
+		}
+
+		private void ShuffleSpawnerIndex ()
+		{
+			for (int i = 0; i < m_spawners.Length; i++) {
+				int randomPosition = Random.Range (0, m_spawners.Length);
+				GameObject movedA = m_spawners [randomPosition];
+				GameObject movedB = m_spawners [i];
+				m_spawners [i] = movedA;
+				m_spawners [randomPosition] = movedB;
+			}
 		}
 
 		private void SetInProgress ()
@@ -191,14 +208,11 @@ namespace HKD_1
 			m_wavesCompleted = 0;
 		}
 
-		private IEnumerator SpawnUnitCount (int count)
+		private IEnumerator SpawnUnitCount (int count, SpawnPoint spawner)
 		{
-			//Need to make it so that a dumptruck load don't come from the same spawner
-			SpawnPoint sp = m_spawners [Random.Range (0, m_spawners.Length)].GetComponent<SpawnPoint> ();
-
 			for (int i = 0; i < count; i++) {
 				//spawn unit
-				SpawnUnit (sp);
+				SpawnUnit (spawner);
 				yield return new WaitForSeconds (m_timeBetweenUnits);
 			}
 
