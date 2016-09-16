@@ -70,6 +70,22 @@ namespace HKD_1
 			m_activeEnemies.Remove ((EnemyController)interactableObject);
 		}
 
+		private Wave NewWave (Set[] sets)
+		{
+			Wave response = new Wave ();
+			response.sets = sets;
+
+			return response;
+		}
+
+		private Set NewSet (int[] unitComposition)
+		{
+			Set response = new Set ();
+			response.units = unitComposition;
+
+			return response;
+		}
+
 		private void SetUpWaves ()
 		{
 			m_activeEnemies = new List<EnemyController> ();
@@ -98,18 +114,17 @@ namespace HKD_1
 			set4 = NewSet (new int[] { 5, 4 });
 			Wave wave3 = NewWave (new Set[] { set1, set2, set3, set4 });
 			m_waves.Add (wave3);
-
 		}
 
 		private void WaveStateMachine ()
 		{
 			switch (m_waveState) {
 			case WaveState.WAITING:
-				Debug.Log ("waiting");
+				Debug.Log ("Lifting next wave");
 				LiftNextWave ();
 				break;
 			case WaveState.READY:
-				Debug.Log ("ready");
+				Debug.Log ("Ready to spawn, lifting the next set");
 				LiftNextSet ();
 				break;
 			case WaveState.SPAWNING:
@@ -152,7 +167,7 @@ namespace HKD_1
 		private void LiftNextSet ()
 		{
 			if (m_currentSetNumber == m_currentWave.sets.Length) {
-				Debug.Log ("downtime");
+				Debug.Log ("Set completed, preparing to enter downtime");
 				m_waveState = WaveState.DOWNTIME;
 				m_currentSetNumber = 0;
 				return;
@@ -161,7 +176,7 @@ namespace HKD_1
 			//Lift a set off the wave
 			m_currentSet = m_currentWave.sets [m_currentSetNumber];
 			m_currentSetNumber += 1;
-			Debug.Log ("spawning");
+			Debug.Log ("Preparing to spawn set groups");
 			m_waveState = WaveState.SPAWNING;
 			m_currentTimeBetweenSets = m_timeBetweenSets;
 		}
@@ -189,7 +204,7 @@ namespace HKD_1
 					m_spawners [i].GetComponent<SpawnPoint> ()));
 			}
 
-			Debug.Log ("set in progress");
+			Debug.Log ("Spawners active");
 			m_waveState = WaveState.SET_IN_PROGRESS;
 			m_currentTimeBetweenSets = m_timeBetweenSets;
 			m_downtimeRemaining = m_downtimeDuration;
@@ -197,6 +212,7 @@ namespace HKD_1
 
 		private void ShuffleSpawnerIndex ()
 		{
+			//Shuffle the array by swapping positions
 			for (int i = 0; i < m_spawners.Length; i++) {
 				int randomPosition = Random.Range (0, m_spawners.Length);
 				GameObject movedA = m_spawners [randomPosition];
@@ -242,32 +258,17 @@ namespace HKD_1
 
 		private void Downtime ()
 		{
+			//Don't enter downtime until all enemies are destroyed
 			if (m_activeEnemies.Count > 0) {
 				return;
 			}
 
-			//wait a period of time then go to the next set, and then the next wave
+			//Give the players a breathing period then go to the next wave
 			m_downtimeRemaining -= Time.deltaTime;
 
 			if (m_downtimeRemaining <= 0) {
 				m_waveState = WaveState.WAITING;
 			}
-		}
-
-		private Wave NewWave (Set[] sets)
-		{
-			Wave response = new Wave ();
-			response.sets = sets;
-
-			return response;
-		}
-
-		private Set NewSet (int[] unitComposition)
-		{
-			Set response = new Set ();
-			response.units = unitComposition;
-
-			return response;
 		}
 	}
 }

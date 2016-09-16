@@ -36,7 +36,7 @@ public class AirConsoleManager : MonoBehaviour
 
 	void OnReady (string code)
 	{
-		Debug.Log ("Ready: " + code);
+
 	}
 
 	void OnMessage (int from, JToken data)
