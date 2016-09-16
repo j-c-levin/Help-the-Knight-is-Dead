@@ -76,7 +76,7 @@ namespace HKD_1
 			m_action = active;
 		}
 
-		//Not needed outside of testing
+		//Not needed or used outside of local testing
 		public void SetDamage ()
 		{
 			for (int i = 0; i < m_interactableList.Count; i++) {

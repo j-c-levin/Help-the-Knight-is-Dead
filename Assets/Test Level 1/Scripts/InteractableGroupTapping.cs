@@ -35,7 +35,7 @@ namespace HKD_1
 
 		public void Interact (PlayerController player)
 		{
-			if (player.tapState == TapState.BUTTON_DOWN) {
+			if (player.tapState == TapState.BUTTON_DOWN && completionPercentage < 100) {
 				CompleteInteraction (player);
 			}
 		}

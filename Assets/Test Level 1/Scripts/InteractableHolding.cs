@@ -4,20 +4,26 @@ using HKD_1;
 
 public class InteractableHolding : InteractableObject, IInteractable
 {
+	private float m_interactionPercentage = 0;
+	private float m_interactionFactor = 30;
+
 	public void Interact (PlayerController player)
 	{
-		if (player.tapState == TapState.BUTTON_PRESSED) {
+		if (player.tapState == TapState.BUTTON_PRESSED && completionPercentage < 100) {
 			CompleteInteraction ();
 		}
 	}
 
 	private void CompleteInteraction ()
 	{
-		//Will absolutely need to change how this is handled because right now
-		//It's biased towards computers that can pump out higher fps
-		completionPercentage += 1;
+		m_interactionPercentage += Time.deltaTime * m_interactionFactor;
+		if (m_interactionPercentage >= 1) {
+			completionPercentage += 1;
+		}
 
-		if (completionPercentage % 15 == 0) {
+		m_interactionPercentage %= 1;
+
+		if (completionPercentage % 10 == 0) {
 			StartCoroutine (flash ());
 		}
 	}
