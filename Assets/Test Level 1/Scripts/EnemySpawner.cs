@@ -80,8 +80,8 @@ namespace HKD_1
 			Set set4;
 			m_waves = new List<Wave> ();
 
-			set1 = NewSet (new int[] { 2, 3 });
-			set2 = NewSet (new int[] { 1, 2 });
+			set1 = NewSet (new int[] { 2, 1 });
+			set2 = NewSet (new int[] { 1, 3 });
 			set3 = NewSet (new int[] { 2, 2 });
 			Wave wave1 = NewWave (new Set[] { set1, set2, set3 });
 			m_waves.Add (wave1);
@@ -176,8 +176,15 @@ namespace HKD_1
 
 			ShuffleSpawnerIndex ();
 
+			int spawnGroupNumber = m_currentSet.units.Length;
+
+			if (spawnGroupNumber > m_spawners.Length) {
+				Debug.LogWarning ("More unit groups than spawners, capping.");
+				spawnGroupNumber = m_spawners.Length;
+			}
+
 			//Take a set of units and set them to spawn
-			for (int i = 0; i < m_currentSet.units.Length; i++) {
+			for (int i = 0; i < spawnGroupNumber; i++) {
 				StartCoroutine (SpawnUnitCount (m_currentSet.units [i],
 					m_spawners [i].GetComponent<SpawnPoint> ()));
 			}
@@ -185,6 +192,7 @@ namespace HKD_1
 			Debug.Log ("set in progress");
 			m_waveState = WaveState.SET_IN_PROGRESS;
 			m_currentTimeBetweenSets = m_timeBetweenSets;
+			m_downtimeRemaining = m_downtimeDuration;
 		}
 
 		private void ShuffleSpawnerIndex ()
@@ -243,7 +251,6 @@ namespace HKD_1
 
 			if (m_downtimeRemaining <= 0) {
 				m_waveState = WaveState.WAITING;
-				m_downtimeRemaining = m_downtimeDuration;
 			}
 		}
 

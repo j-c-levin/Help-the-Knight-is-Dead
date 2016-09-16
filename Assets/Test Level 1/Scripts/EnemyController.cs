@@ -16,7 +16,7 @@ namespace HKD_1
 		private bool m_destroyAfterHittingKing = false;
 
 		private float m_damageTickTimer = 1.5f;
-		private float m_movementSpeed = 0.01f;
+		private float m_movementSpeed = 0.5f;
 
 		private int m_damageToObstacles = 20;
 
@@ -36,7 +36,9 @@ namespace HKD_1
 
 		void Update ()
 		{
-			transform.position = Vector2.MoveTowards (transform.position, currentNode.transform.position, m_movementSpeed);
+			transform.position = Vector2.MoveTowards (transform.position, currentNode.transform.position, Time.deltaTime * m_movementSpeed);
+
+			transform.right = currentNode.transform.position - transform.position;
 
 			float me = transform.position.x;
 			float dest = currentNode.transform.position.x;

@@ -41,10 +41,7 @@ public class AirConsoleManager : MonoBehaviour
 
 	void OnMessage (int from, JToken data)
 	{ 
-		Debug.Log ("time: " + (AirConsole.instance.GetServerTime () - (long)data ["time"]));
-		if (AirConsole.instance.GetServerTime () - (long)data ["time"] > 1050) {
-//			Debug.LogWarning ("Message ping too long, discarding");
-		}
+//		Debug.Log ("time: " + (AirConsole.instance.GetServerTime () - (long)data ["time"]));
 
 		if ((object)data ["joystick-left"] != null) {
 			ReceivedMovement (from, data);
